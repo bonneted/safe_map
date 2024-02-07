@@ -1,9 +1,39 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Hello World</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map Application</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="control-panel">
+    <button id="homeBtn">Home</button>
+
+    <div class="control-group">
+        <label for="dataTypeSelect">Data type:</label>
+        <select id="dataTypeSelect">
+            <option value="num_accidents">Historical</option>
+            <option value="predicted_accidents">Predicted</option>
+        </select>
+    </div>
+    
+    <div class="range-group">
+        <span>shortest</span>
+        <input type="range" id="alphaSlider" min="0" max="1" step="0.01" value="0.5">
+        <span>safest</span>
+    </div>
+    
+    <div class="control-group">
+        <input type="checkbox" id="keepLinesAlive" name="keepLinesAlive">
+        <label for="keepLinesAlive">Keep routes alive</label>
+        <input type="checkbox" id="showAccidentData" name="showAccidentData">
+        <label for="keepLinesAlive">Show accident data</label>
+    </div>
+</div>
+<div id="mapid"></div>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+</body>
 </html>
