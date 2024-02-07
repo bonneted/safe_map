@@ -14,7 +14,6 @@ function getColorForAccidents(numAccidents) {
 }
 
 function addGraphLayer(map) {
-    // Function to determine color based on the number of accidents
     if (accident_layer) {
         map.removeLayer(accident_layer);
     }
@@ -23,7 +22,6 @@ function addGraphLayer(map) {
     if (!showAccidentData) return;
 
     var dataType = document.getElementById('dataTypeSelect').value;
-    console.log(dataType);
 
     // Load and add the edges GeoJSON layer with dynamic styling
     fetch('/static/edges.geojson')
@@ -35,9 +33,9 @@ function addGraphLayer(map) {
                 var color = getColorForAccidents(numAccidents);
                 return {color: color, weight: 2};
             }
-        }).addTo(map);
+        }).addTo(map)
+    .finally(() => calculatePath());
     });
-    calculatePath();
 }
 
 
@@ -72,10 +70,7 @@ function initializeMap() {
     startMarker = L.marker(marienplatz).addTo(map).bindPopup("Marienplatz", {autoClose: false}).openPopup();
     endMarker = L.marker(nympenburg).addTo(map).bindPopup("Nymphenburg",{autoClose: false}).openPopup();
 
-    // URLs to your GeoJSON files
-    var edgesGeojsonURL = '{{ url_for("static", filename="edges.geojson") }}';
 
-    var nodesGeojsonURL = '{{ url_for("static", filename="nodes.geojson") }}';
 
     // Call the function to add the graph layer to the map
 
@@ -123,7 +118,7 @@ document.getElementById('homeBtn').addEventListener('click', function() {
     var marienplatz = L.latLng(48.137393,11.575448)
     var nympenburg = L.latLng(48.158268,11.503314)
     startMarker = L.marker(marienplatz).addTo(map).bindPopup("Marienplatz", {autoClose: false}).openPopup();
-    endMarker = L.marker(nympenburg).addTo(map).bindPopup("Nympenburg").openPopup();
+    endMarker = L.marker(nympenburg).addTo(map).bindPopup("Nymphenburg").openPopup();
 
     zoomToRoute = true;
     calculatePath();
