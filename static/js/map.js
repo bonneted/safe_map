@@ -23,7 +23,7 @@ function addGraphLayer(map) {
         calculatePath();
         return;
     }
-
+    document.getElementById('loader').style.display = 'flex';
     var dataType = document.getElementById('dataTypeSelect').value;
 
     // Load and add the edges GeoJSON layer with dynamic styling
@@ -38,7 +38,10 @@ function addGraphLayer(map) {
             }
         }).addTo(map);
     })
-    .finally(calculatePath)
+    .finally(() => {
+        calculatePath();
+        document.getElementById('loader').style.display = 'none';
+    })
 }
 
 

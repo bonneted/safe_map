@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-
 <div class="control-panel">
     <button id="homeBtn">Home</button>
 
@@ -32,7 +31,14 @@
         <label for="keepLinesAlive">Show accident data</label>
     </div>
 </div>
-<div id="mapid"></div>
+<div id="mapid">
+  <div id="loader" style="display: none;">
+    <div class="loader">
+      <span class="inner1"></span>
+      <span class="inner2"></span>
+      <span class="inner3"></span>
+    </div>
+</div>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 </body>
