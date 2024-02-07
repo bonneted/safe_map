@@ -20,7 +20,7 @@ body {
     left: 0;
     width: 100%; /* Full width of the map container */
     height: 100%; /* Full height of the map container */
-    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    background: rgba(255, 255, 255, 0.249); /* Semi-transparent white background */
     color: #000; /* Text color */
     display: flex;
     justify-content: center;
