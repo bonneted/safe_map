@@ -1,14 +1,10 @@
 # %%
-import matplotlib.pyplot as plt
+
 import networkx as nx
 import osmnx as ox
-import numpy as np
 import os
-import plotly.graph_objects as go
-import folium
-from matplotlib.colors import LinearSegmentedColormap
 from flask import Flask, render_template, request, jsonify
-import geopandas as gpd
+# import geopandas as gpd
 # from flask_cors import CORS
 
 # %%
@@ -62,21 +58,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    # Generate a Folium map
-    marienplatz = (11.575448,48.137393)
-    nympenburg = (11.503314,48.158268)
 
-    bbox = [48.178301, 11.479089, 48.126705, 11.585432]
-    start_coords = ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
-    folium_map = folium.Map(location=start_coords, zoom_start=14)
-    
-    # Draw bounding box
-    folium.Rectangle(bounds=[(bbox[0], bbox[1]), (bbox[2], bbox[3])], color="red", fill=False).add_to(folium_map)
-    
-    # Render the map as HTML
-    map_html = folium_map._repr_html_()
-    
-    return render_template('index.html', map_html=map_html)
+    return render_template('index.html')
 
 
 # Route to handle path calculation
