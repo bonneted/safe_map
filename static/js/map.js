@@ -67,7 +67,7 @@ function initializeMap() {
     
     L.polygon(polygonWithHole, {
         color: 'red', // Color for the outer area
-        fillOpacity: 0.2, // Adjust for desired opacity for the outer area
+        fillOpacity: 0.1, // Adjust for desired opacity for the outer area
         weight: 1
     }).addTo(map).bindPopup("Area not covered by the model");
 
