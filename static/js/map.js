@@ -19,7 +19,10 @@ function addGraphLayer(map) {
     }
 
     var showAccidentData = document.getElementById('showAccidentData').checked;
-    if (!showAccidentData) return;
+    if (!showAccidentData) {
+        calculatePath();
+        return;
+    }
 
     var dataType = document.getElementById('dataTypeSelect').value;
 
@@ -33,10 +36,11 @@ function addGraphLayer(map) {
                 var color = getColorForAccidents(numAccidents);
                 return {color: color, weight: 2};
             }
-        }).addTo(map)
-    .finally(() => calculatePath());
-    });
+        }).addTo(map);
+    })
+    .finally(calculatePath)
 }
+
 
 
 
