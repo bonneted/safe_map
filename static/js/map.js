@@ -186,10 +186,10 @@ function calculatePath() {
 document.getElementById('alphaSlider').addEventListener('change', calculatePath);
 
 // Add event listener for automatic recalculation when data type changes
-document.getElementById('dataTypeSelect').addEventListener('change', function() {addGraphLayer(map); calculatePath(); });
+document.getElementById('dataTypeSelect').addEventListener('change', function() {addGraphLayer(map) });
 
 // Add event listener for showing/hiding accident data
-document.getElementById('showAccidentData').addEventListener('change', function() { calculatePath(); addGraphLayer(map); });
+document.getElementById('showAccidentData').addEventListener('change', function() {addGraphLayer(map) });
 
 // Add event listener for keeping lines alive
 document.getElementById('keepLinesAlive').addEventListener('change', function() { calculatePath() });
