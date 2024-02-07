@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>How to Use This Tool</h2>
+    <ul>
+      <li><strong>Choose Data Type:</strong> Select "Historical" for collected accident data or "Predicted" for risk assessment based on road properties.</li>
+      <li><strong>Adjust Risk Coefficient:</strong> Use the slider to weigh the importance of past accidents or predicted risks in your route.</li>
+      <li><strong>Keep Routes Alive:</strong> Enable this option to display multiple routes simultaneously.</li>
+      <li><strong>Show Accident/Risk Data:</strong> Show a colormap of each road's past or predicted accidents.</li>
+      <li><strong>Plotting a Route:</strong> Click on the map twice to set the starting and ending points for your route.</li>
+    </ul>
+  </div>
+</div>
+
 <div class="control-panel">
     <button id="homeBtn">Home</button>
 
@@ -30,6 +44,7 @@
         <input type="checkbox" id="showAccidentData" name="showAccidentData">
         <label for="keepLinesAlive">Show accident data</label>
     </div>
+    <button id="helpBtn">?</button>
 </div>
 <div id="mapid">
   <div id="loader" style="display: none;">
@@ -38,6 +53,7 @@
       <span class="inner2"></span>
       <span class="inner3"></span>
     </div>
+
 </div>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
