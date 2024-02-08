@@ -261,17 +261,33 @@ background: rgba(255, 255, 255, 0.8);
 box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 border-radius: 5px;
 }
+.legend .checkboxes {
+    margin-bottom: 5px; /* Spacing between checkboxes and color legend */
+    border-bottom: 2px solid #888;
+    padding-bottom: 5px;
+}
+
+.legend .checkboxes label {
+    margin-left: 5px; /* Spacing between checkbox and its label */
+    font-size: 14px; /* Adjust label font size as needed */
+    font-size: 0.9em;
+}
+.legend h4 {
+    margin: 0 0 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
 .legend .item {
     display: flex;
-    flex-direction: row;
-    margin-bottom: 0px; /* Optional: add some space between items */
     align-items: center;
+    margin-bottom: 4px;
 }
 
 .legend i {
     width: 18px;
     height: 18px;
-    flex-shrink: 0; /* Prevent the icon from shrinking */
-    margin-right: 8px; /* Space between the icon and the text */
+    flex-shrink: 0;
+    margin-right: 8px;
     opacity: 0.7;
 }

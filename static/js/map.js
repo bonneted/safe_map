@@ -3,11 +3,45 @@
 var map; // Define map globally at the top of the file
 var startMarker, endMarker;
 var polylines = []; // Array to store references to all polylines
-var accident_layer = false;
+var accidentsOnRoads = false;
+var accidentsCoord = false;
+var BlackBackground = false;
 var zoomToRoute = false;
 
 var colors = ['#009900', '#ffff00', '#ff9900', '#ff0000']; // From green to red
 var labels = ['0', '0-1', '1-2', '> 2']; 
+
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function () {
+    var div = L.DomUtil.create('div', 'info legend'),
+        values = ["0", "0-1", "1-2", "> 2"];
+    var labels = [];
+
+    // HTML for the checkboxes
+    var checkboxesHtml = `
+        <div class="checkboxes">
+            <h4>Show accidents :</h4>
+            <input type="checkbox" id="accidentsCoords">
+            <label for="accidentsCoords">coords</label><br>
+            <input type="checkbox" id="accidentsPerRoads" checked>
+            <label for="accidentsPerRoads">per roads</label><br>
+            <input type="checkbox" id="mapBackground" >
+            <label for="mapBackground">background</label>
+        </div>
+    `;
+
+    // Generate a label with a colored square for each interval
+    for (var i = 0; i < values.length; i++) {
+        labels.push('<div class="item"><i style="background:' + colors[i] + '"></i> ' + values[i] + '</div>');
+    }
+
+    // Combine checkboxes HTML with the legend labels
+    div.innerHTML = checkboxesHtml + labels.join(' ')
+    L.DomEvent.disableClickPropagation(div);
+    return div;
+}
+
 
 function getColorForAccidents(numAccidents) {
     if (numAccidents > 2) return '#ff0000'; // red for more than 50 accidents
@@ -16,40 +50,97 @@ function getColorForAccidents(numAccidents) {
     else return '#009900'; // green for 0-10 accidents
 }
 
-function addGraphLayer(map) {
-    if (accident_layer) {
-        map.removeLayer(accident_layer);
-    }
+function setLayersOrder() {
+    if (accidentsOnRoads) accidentsOnRoads.bringToFront();
+    if (accidentsCoord) accidentsCoord.bringToFront();
+    if (polylines.length > 0) polylines.forEach(polyline => polyline.bringToFront());
+}
 
-    var showAccidentData = document.getElementById('showAccidentData').checked;
-    if (!showAccidentData) {
-        calculatePath();
-        legend.remove();
-        return;
-    }
+
+function toggleAccidentsOnRoads(map) {
+    if (!document.getElementById('accidentsPerRoads').checked) {
+        if (accidentsOnRoads){
+            map.removeLayer(accidentsOnRoads);
+            accidentsOnRoads = false;
+        }
+    } else {
     document.getElementById('loader').style.display = 'flex';
-    var dataType = document.getElementById('dataTypeSelect').value;
-
-    // Load and add the edges GeoJSON layer with dynamic styling
-    fetch('/static/edges.geojson')
+    fetch('/static/data/edges.geojson')
     .then(response => response.json())
     .then(data => {
-        accident_layer = L.geoJson(data, {
+        if (accidentsOnRoads) {
+            map.removeLayer(accidentsOnRoads);
+        }
+        var dataType = document.getElementById('dataTypeSelect').value;
+        accidentsOnRoads = L.geoJson(data, {
             style: function(feature) {
                 var numAccidents = feature.properties[dataType];
                 var color = getColorForAccidents(numAccidents);
                 return {color: color, weight: 2};
             }
         }).addTo(map);
+        setLayersOrder();
     })
-    .finally(() => {
-        legend.addTo(map);
-        calculatePath();
-        document.getElementById('loader').style.display = 'none';
+    .finally(() => document.getElementById('loader').style.display = 'none');
+    }
+}
+
+function toggleAccidentsCoord(map) {
+    if (!document.getElementById('accidentsCoords').checked) {
+        if (accidentsCoord){
+            map.removeLayer(accidentsCoord);
+            accidentsCoord = false;
+        }
+    } else if (!accidentsCoord) {
+    document.getElementById('loader').style.display = 'flex';
+    fetch('/static/data/munich_accidents_2018_2022.geojson')
+    .then(response => response.json())
+    .then(data => {
+        if (accidentsCoord) {
+            map.removeLayer(accidentsCoord);
+        }
+        accidentsCoord = L.geoJson(data, {
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: 3,
+                    weight: 0,
+                    opacity: 0.5,
+                    fillOpacity: 0.5
+                });
+            }
+        }).addTo(map);
+        setLayersOrder();
     })
+    .finally(() => document.getElementById('loader').style.display = 'none');
+    }
 }
 
 
+function toggleBackground(map) {
+    var isChecked = document.getElementById('mapBackground').checked;
+    
+    if (isChecked) {
+        // Check if the blackBackground already exists; if not, create it
+        if (!BlackBackground) {
+            // Define bounds that cover the entire world
+            var bounds = [[-90, -180], [90, 180]];
+            // Create a rectangle covering the entire map with a black fill
+            BlackBackground = L.rectangle(bounds, {color: "#000", weight: 1, fillOpacity: 1}).addTo(map);
+            // Ensure it goes behind any other map features
+            BlackBackground.bringToBack();
+        } else {
+            // If it exists but is not on the map, add it
+            BlackBackground.addTo(map);
+            BlackBackground.bringToBack();
+        }
+    } else {
+        // If the checkbox is not checked and the layer exists, remove it
+        if (BlackBackground) {
+            map.removeLayer(BlackBackground);
+        }
+    }
+}
+    
 
 
 function initializeMap() {
@@ -58,23 +149,10 @@ function initializeMap() {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     var bbox = [[48.178301, 11.479089], [48.126705, 11.585432]];
-    var outerBounds = [[48.0, 11.3], [48.0, 11.8], [48.3, 11.8], [48.3, 11.3]]; // Example outer bounds
-    var bboxlimit = [[48.126705, 11.479089], [48.126705, 11.585432], [48.178301, 11.585432], [48.178301, 11.479089]];
-    
-    // Reverse the bbox coordinates for the hole effect
-    var bboxReversed = bboxlimit.slice().reverse();
-    
-    // Create a polygon with a hole
-    var polygonWithHole = [
-        outerBounds, // Outer boundary
-        bboxReversed // Inner boundary (bbox as hole)
-    ];
-    
-    L.polygon(polygonWithHole, {
-        color: 'red', // Color for the outer area
-        fillOpacity: 0.1, // Adjust for desired opacity for the outer area
-        weight: 1
-    }).addTo(map).bindPopup("Area not covered by the model");
+    var bounds = L.latLngBounds(bbox[0], bbox[1]);
+    // Create a rectangle with red fill on the bounds
+    var redRectangle = L.rectangle(bounds, {color: "red", weight: 3, fill : false}).addTo(map);
+
 
     // First route calculation
     var marienplatz = L.latLng(48.137393,11.575448)
@@ -104,6 +182,8 @@ function initializeMap() {
                 calculatePath();
             }
             clickCount++;
+        } else {
+            L.popup().setLatLng(e.latlng).setContent('Please select a point within the red rectangle').openOn(map);
         }
     });
 }
@@ -192,14 +272,26 @@ function calculatePath() {
 // Add event listener for automatic recalculation when alpha changes
 document.getElementById('alphaSlider').addEventListener('change', calculatePath);
 
-// Add event listener for automatic recalculation when data type changes
-document.getElementById('dataTypeSelect').addEventListener('change', function() {addGraphLayer(map) });
+document.getElementById('dataTypeSelect').addEventListener('change', function() {showData(map) });
+document.getElementById('showAccidentData').addEventListener('change', function() {
+    if (document.getElementById('showAccidentData').checked) {
+        legend.addTo(map); // Adjust based on your needs; you might want to always show or conditionally show the legend
+        document.getElementById('accidentsCoords').addEventListener('change', function() { toggleAccidentsCoord(map); });
+        document.getElementById('accidentsPerRoads').addEventListener('change', function() { toggleAccidentsOnRoads(map); });
+        document.getElementById('mapBackground').addEventListener('change', function() { toggleBackground(map); });
+        toggleAccidentsCoord(map);
+        toggleAccidentsOnRoads(map);
+        toggleBackground(map);
+    } else {
+        if (accidentsOnRoads) map.removeLayer(accidentsOnRoads);
+        if (accidentsCoord) map.removeLayer(accidentsCoord);
+        if (legend) map.removeControl(legend);
+    }
+});
 
-// Add event listener for showing/hiding accident data
-document.getElementById('showAccidentData').addEventListener('change', function() {addGraphLayer(map) });
 
-// Add event listener for keeping lines alive
 document.getElementById('keepLinesAlive').addEventListener('change', function() { calculatePath() });
+
 
 function getColorForAlpha(alpha) {
 
@@ -249,19 +341,4 @@ window.onclick = function(event) {
 }
 
 
-var legend = L.control({position: 'bottomright'});
 
-legend.onAdd = function () {
-    var div = L.DomUtil.create('div', 'info legend'),
-        values = ["0","0-1","1-2","> 2"];
-        labels = [];
-
-    // Generate a label with a colored square for each interval
-    for (var i = 0; i < values.length; i++) {
-        labels.push(
-            '<div class="item"><i style="background:' + colors[i] + '"></i> ' + values[i] + '</div>');
-    }
-
-    div.innerHTML = labels.join(' ');
-    return div;
-};

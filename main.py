@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, jsonify
 
 # %%
 dir_path = os.path.dirname(os.path.realpath(__file__))
-graph_path = os.path.join(dir_path,"static", "munich_with_predicted_accidents_all.graphml")
+graph_path = os.path.join(dir_path,"static","data","munich_with_predicted_accidents_all.graphml")
 munich_graph_accident = ox.load_graphml(graph_path)
 
 # Convert graph edges and nodes to GeoDataFrames
