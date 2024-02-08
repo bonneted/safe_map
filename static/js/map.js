@@ -6,6 +6,9 @@ var polylines = []; // Array to store references to all polylines
 var accident_layer = false;
 var zoomToRoute = false;
 
+var colors = ['#009900', '#ffff00', '#ff9900', '#ff0000']; // From green to red
+var labels = ['0', '0-1', '1-2', '> 2']; 
+
 function getColorForAccidents(numAccidents) {
     if (numAccidents > 2) return '#ff0000'; // red for more than 50 accidents
     else if (numAccidents > 1) return '#ff9900'; // orange for 21-50 accidents
@@ -21,6 +24,7 @@ function addGraphLayer(map) {
     var showAccidentData = document.getElementById('showAccidentData').checked;
     if (!showAccidentData) {
         calculatePath();
+        legend.remove();
         return;
     }
     document.getElementById('loader').style.display = 'flex';
@@ -39,6 +43,7 @@ function addGraphLayer(map) {
         }).addTo(map);
     })
     .finally(() => {
+        legend.addTo(map);
         calculatePath();
         document.getElementById('loader').style.display = 'none';
     })
@@ -223,12 +228,12 @@ var span = document.getElementsByClassName("close")[0];
 
 // When the page loads, open the modal
 window.onload = function() {
-    modal.style.display = "block";
+    modal.style.display = "grid";
 }
 
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
-    modal.style.display = "block";
+    modal.style.display = "grid";
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -242,3 +247,21 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+
+
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function () {
+    var div = L.DomUtil.create('div', 'info legend'),
+        values = ["0","0-1","1-2","> 2"];
+        labels = [];
+
+    // Generate a label with a colored square for each interval
+    for (var i = 0; i < values.length; i++) {
+        labels.push(
+            '<div class="item"><i style="background:' + colors[i] + '"></i> ' + values[i] + '</div>');
+    }
+
+    div.innerHTML = labels.join(' ');
+    return div;
+};

@@ -78,9 +78,31 @@ def calculate_path():
         munich_graph_accident.edges[edge]['cost'] = alpha * munich_graph_accident.edges[edge][data_type] + (1 - alpha) * munich_graph_accident.edges[edge]["length"]/250 
 
     route = nx.shortest_path(munich_graph_accident, nodes_start, nodes_end, weight='cost')
-    route_latlng = [(munich_graph_accident.nodes[node]['y'], munich_graph_accident.nodes[node]['x']) for node in route]
+    route_latlngs = []
+
+    for i in range(len(route) - 1):
+        u, v = route[i], route[i + 1]
+        edge_data = munich_graph_accident.get_edge_data(u, v)
+        
+        # Get the first (or only) edge's geometry
+        key = next(iter(edge_data))
+        geom = edge_data[key].get('geometry', None)
+        
+        # If the edge has a geometry, extend the route_latlngs list with its coordinates
+        if geom:
+            coords = list(geom.coords)
+            route_latlngs.extend([(lat, lng) for lng, lat in coords])
+        else:
+            # Fallback to node positions if no geometry is found
+            start_y, start_x = munich_graph_accident.nodes[u]['y'], munich_graph_accident.nodes[u]['x']
+            end_y, end_x = munich_graph_accident.nodes[v]['y'], munich_graph_accident.nodes[v]['x']
+            route_latlngs.extend([(start_y, start_x), (end_y, end_x)])
+
+    # Deduplicate consecutive coordinates
+    route_latlngs = [route_latlngs[i] for i in range(len(route_latlngs)) if i == 0 or route_latlngs[i] != route_latlngs[i-1]]
+
     
-    return jsonify(route_latlng)
+    return jsonify(route_latlngs)
 
 
 if __name__ == '__main__':

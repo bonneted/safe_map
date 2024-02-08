@@ -12,12 +12,24 @@
     <span class="close">&times;</span>
     <h2>How to Use This Tool</h2>
     <ul>
-      <li><strong>Choose Data Type:</strong> Select "Historical" for collected accident data or "Predicted" for risk assessment based on road properties.</li>
-      <li><strong>Adjust Risk Coefficient:</strong> Use the slider to weigh the importance of past accidents or predicted risks in your route.</li>
-      <li><strong>Keep Routes Alive:</strong> Enable this option to display multiple routes simultaneously.</li>
-      <li><strong>Show Accident/Risk Data:</strong> Show a colormap of each road's past or predicted accidents.</li>
       <li><strong>Plotting a Route:</strong> Click on the map twice to set the starting and ending points for your route.</li>
+      <li><strong>Choose Data Type:</strong> Select "collected" for collected accident data or "predicted" for risk assessment based on road properties.</li>
+      <li><strong>Adjust Risk Coefficient:</strong> Use the slider to weigh the safety factors in the route calculation.</li>
+      <li><strong>Keep Routes Alive:</strong> Enable this option to display multiple routes simultaneously.</li>
+      <li><strong>Show Accident/Risk Data:</strong> Show a colormap of each road's assigned accident or risk score.</li>
     </ul>
+    <div class="more-info">
+      <h3>More Information</h3>
+      <p>This routing algorithm was made during an hackathon organised inside the Greydient ITN project, for more information please visit the <a href="https://www.greydient.eu/">Greydient website</a>.</p>
+      <p>The goal was to use a database of recorded accidents to take into account the safety in the routing algorithm. 
+        They first step was to project the accident data onto the road network (from OpenStreetMap) using nearest neighbor search. It was then possible to calculate the number of accidents ecountered for each route and use it as a cost function ("collected data").
+        Secondly, we established statistical correlations between road properties (from OpenStreetMap: road type, speed limit, number of lanes, etc.) and the number of accidents. We used these statistics to assign a risk score to each road segment, building a cost function more robust to non-representative data ("predicted data"). 
+        This robustness can be shown by switching between data type : large detours appearing with collected data disappear when switching to predicted.
+      </p>
+      <p><strong>Note:</strong> To be truly relevant, the accident data should be weighted by the traffic volume. This is not the case here, but it could be added in the future.</p>
+
+    </div>
+
   </div>
 </div>
 
@@ -27,8 +39,8 @@
     <div class="control-group">
         <label for="dataTypeSelect">Data type:</label>
         <select id="dataTypeSelect">
-            <option value="num_accidents">Historical</option>
-            <option value="predicted_accidents">Predicted</option>
+            <option value="num_accidents">collected</option>
+            <option value="predicted_accidents">predicted</option>
         </select>
     </div>
     
