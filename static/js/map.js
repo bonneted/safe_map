@@ -25,9 +25,9 @@ legend.onAdd = function () {
         <div class="checkboxes">
             <h4>Show accidents :</h4>
             <input type="checkbox" id="accidentsCoords">
-            <label for="accidentsCoords">coords</label><br>
+            <label for="accidentsCoords">locations</label><br>
             <input type="checkbox" id="accidentsPerRoads" checked>
-            <label for="accidentsPerRoads">per roads</label><br>
+            <label for="accidentsPerRoads">on roads</label><br>
             <input type="checkbox" id="mapBackground" >
             <label for="mapBackground">background</label>
         </div>
