@@ -8,9 +8,8 @@ body {
 }
 
 #mapid {
-    height: 80vh;
-    width: 90vw;
-    margin-top: 20px;
+    height: 100vh;
+    width: 100vw;
 }
 .leaflet-popup-content-wrapper {
     text-align: center;
@@ -122,11 +121,14 @@ li {
 
 
 .control-panel {
+    position: absolute;
+    z-index: 1000;
+    justify-self: center;
     display: flex;
     align-items: center;
     gap: 2em;
     padding: 10px;
-    background-color: #f0f0f0;
+    background-color: hsl(0, 0%, 98%);
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-top: 20px;
@@ -234,23 +236,23 @@ display: block;
 .loader .inner1,
 .loader .inner2,
 .loader .inner3 {
-display: inline-block;
-margin: 0.25em;
-width: 1em;
-height: 1em;
-border: 1px solid darkgray;
-border-radius: 2em;
-background-color: darkgray;
--webkit-transform-origin: 50%;
-transform-origin: 50%;
--webkit-animation-duration: 1s;
-animation-duration: 1s;
--webkit-animation-name: rotate;
-animation-name: rotate;
--webkit-animation-iteration-count: infinite;
-animation-iteration-count: infinite;
--webkit-animation-timing-function: linear;
-animation-timing-function: linear;
+    display: inline-block;
+    margin: 0.25em;
+    width: 1em;
+    height: 1em;
+    border: 1px solid darkgray;
+    border-radius: 2em;
+    background-color: darkgray;
+    -webkit-transform-origin: 50%;
+    transform-origin: 50%;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-name: rotate;
+    animation-name: rotate;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
 }
 .loader .inner2 {
 animation-delay: 0.25s;
@@ -262,7 +264,7 @@ animation-delay: 0.5s;
 
 .legend {
 padding: 6px 8px;
-font: 14px Arial, Helvetica, sans-serif;
+font: 1.5em Arial, Helvetica, sans-serif;
 background: white;
 background: rgba(255, 255, 255, 0.8);
 box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
@@ -276,7 +278,7 @@ border-radius: 5px;
 
 .legend .checkboxes label {
     margin-left: 5px; /* Spacing between checkbox and its label */
-    font-size: 14px; /* Adjust label font size as needed */
+    /* font-size: 14px; Adjust label font size as needed */
     font-size: 0.9em;
 }
 .legend h4 {

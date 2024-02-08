@@ -271,7 +271,7 @@ document.getElementById('showAccidentData').addEventListener('change', function(
     if (document.getElementById('showAccidentData').checked) {
         legend.addTo(map); // Adjust based on your needs; you might want to always show or conditionally show the legend
         document.getElementById('accidentsCoords').addEventListener('change', function() { toggleAccidentsCoord(map); });
-        document.getElementById('accidentsPerRoads').addEventListener('change', function() { toggleAccidentsOnRoads(map); });
+        document.getElementById('accidentsPerRoads').addEventListener('change', function() { toggleAccidentsOnRoads(map); calculatePath(); });
         document.getElementById('mapBackground').addEventListener('change', function() { toggleBackground(map); });
         toggleAccidentsCoord(map);
         toggleAccidentsOnRoads(map);
