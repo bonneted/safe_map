@@ -7,6 +7,8 @@ var accidentsOnRoads = false;
 var accidentsCoord = false;
 var BlackBackground = false;
 var zoomToRoute = false;
+var redRectangle = false;
+
 
 var colors = ['#009900', '#ffff00', '#ff9900', '#ff0000']; // From green to red
 var labels = ['0', '0-1', '1-2', '> 2']; 
@@ -91,9 +93,11 @@ function toggleAccidentsCoord(map) {
             map.removeLayer(accidentsCoord);
             accidentsCoord = false;
         }
-    } else if (!accidentsCoord) {
+    } else {
     document.getElementById('loader').style.display = 'flex';
-    fetch('/static/data/munich_accidents_2018_2022.geojson')
+    var fillColor = `rgba(0, 123, 255, 1)`;
+    if (document.getElementById('mapBackground').checked) fillColor = "white";
+    fetch('/static/data/city_center_accidents_2018_2022.geojson')
     .then(response => response.json())
     .then(data => {
         if (accidentsCoord) {
@@ -105,7 +109,8 @@ function toggleAccidentsCoord(map) {
                     radius: 3,
                     weight: 0,
                     opacity: 0.5,
-                    fillOpacity: 0.5
+                    fillOpacity: 0.5,
+                    fillColor: fillColor
                 });
             }
         }).addTo(map);
@@ -120,25 +125,11 @@ function toggleBackground(map) {
     var isChecked = document.getElementById('mapBackground').checked;
     
     if (isChecked) {
-        // Check if the blackBackground already exists; if not, create it
-        if (!BlackBackground) {
-            // Define bounds that cover the entire world
-            var bounds = [[-90, -180], [90, 180]];
-            // Create a rectangle covering the entire map with a black fill
-            BlackBackground = L.rectangle(bounds, {color: "#000", weight: 1, fillOpacity: 1}).addTo(map);
-            // Ensure it goes behind any other map features
-            BlackBackground.bringToBack();
-        } else {
-            // If it exists but is not on the map, add it
-            BlackBackground.addTo(map);
-            BlackBackground.bringToBack();
-        }
+        redRectangle.setStyle({color: "red", weight: 3, fill : true, fillColor: "black", fillOpacity: 1});
     } else {
-        // If the checkbox is not checked and the layer exists, remove it
-        if (BlackBackground) {
-            map.removeLayer(BlackBackground);
-        }
+        redRectangle.setStyle({color: "red", weight: 3, fill : false});
     }
+    toggleAccidentsCoord(map);
 }
     
 
@@ -149,9 +140,10 @@ function initializeMap() {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     var bbox = [[48.178301, 11.479089], [48.126705, 11.585432]];
-    var bounds = L.latLngBounds(bbox[0], bbox[1]);
     // Create a rectangle with red fill on the bounds
-    var redRectangle = L.rectangle(bounds, {color: "red", weight: 3, fill : false}).addTo(map);
+    var bounds = L.latLngBounds(bbox[0], bbox[1]);
+    redRectangle = L.rectangle(bounds, {color: "red", weight: 3, fill : false, fillColor: "black", fillOpacity: 1});
+    redRectangle.addTo(map);
 
 
     // First route calculation
@@ -245,7 +237,7 @@ function calculatePath() {
             var color = getColorForAlpha(alpha);
             if (polylines.length > 0 && !keepLinesAlive) cleanPolylines();
 
-            if (showAccidentData) {
+            if (showAccidentData && accidentsOnRoads) {
                 var newPolyline = L.polyline(routeLatlng, {color: `rgba(0, 123, 255, 1)`, weight: 5, lineJoin: 'round'}).addTo(map).bindPopup(`Route based on ${dataTypeName} data with safety factor ${alpha}`, {autoClose: true})
                 polylines.push(newPolyline); // Store the reference
             } else {
@@ -271,8 +263,10 @@ function calculatePath() {
 
 // Add event listener for automatic recalculation when alpha changes
 document.getElementById('alphaSlider').addEventListener('change', calculatePath);
-
-document.getElementById('dataTypeSelect').addEventListener('change', function() {showData(map) });
+document.getElementById('dataTypeSelect').addEventListener('change', function() {
+    if (document.getElementById('showAccidentData').checked) toggleAccidentsOnRoads(map);
+    calculatePath();});
+    
 document.getElementById('showAccidentData').addEventListener('change', function() {
     if (document.getElementById('showAccidentData').checked) {
         legend.addTo(map); // Adjust based on your needs; you might want to always show or conditionally show the legend
@@ -282,10 +276,13 @@ document.getElementById('showAccidentData').addEventListener('change', function(
         toggleAccidentsCoord(map);
         toggleAccidentsOnRoads(map);
         toggleBackground(map);
+        calculatePath();
     } else {
         if (accidentsOnRoads) map.removeLayer(accidentsOnRoads);
         if (accidentsCoord) map.removeLayer(accidentsCoord);
         if (legend) map.removeControl(legend);
+        if (redRectangle)redRectangle.setStyle({color: "red", weight: 3, fill : false});
+        calculatePath();
     }
 });
 

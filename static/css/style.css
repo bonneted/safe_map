@@ -60,6 +60,7 @@ body {
     width: 100%; /* Could be more or less, depending on screen size */
     max-width: 700px; /* Maximum width */
     justify-content: center;
+    border-radius: 5px;
 }
 .modal-content strong {
     font-size: 1.1em;
@@ -213,45 +214,51 @@ input[type=checkbox] {
     }
 }
   
-  @-webkit-keyframes rotate {
-    0% {
-      -webkit-transform: translateY(0%);
-    }
-    30% {
-      -webkit-transform: translateY(-0.5em);
-    }
-    50% {
-      -webkit-transform: translateY(0%);
-    }
-    70% {
-      -webkit-transform: translateY(0.5em);
-    }
-  }
-  .loader {
-    display: block;
-  }
-  .loader .inner1,
-  .loader .inner2,
-  .loader .inner3 {
-    display: inline-block;
-    margin: 0.25em;
-    width: 1em;
-    height: 1em;
-    border: 1px solid darkgray;
-    border-radius: 2em;
-    background-color: darkgray;
-    -webkit-transform-origin: 50%;
-    -webkit-animation-duration: 1s;
-    -webkit-animation-name: rotate;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-  }
-  .loader .inner2 {
-    -webkit-animation-delay: 0.25s;
-  }
-  .loader .inner3 {
-    -webkit-animation-delay: 0.5s;
-  }
+@keyframes rotate {
+0% {
+    -webkit-transform: translateY(0%);
+}
+30% {
+    -webkit-transform: translateY(-0.5em);
+}
+50% {
+    -webkit-transform: translateY(0%);
+}
+70% {
+    -webkit-transform: translateY(0.5em);
+}
+}
+.loader {
+display: block;
+}
+.loader .inner1,
+.loader .inner2,
+.loader .inner3 {
+display: inline-block;
+margin: 0.25em;
+width: 1em;
+height: 1em;
+border: 1px solid darkgray;
+border-radius: 2em;
+background-color: darkgray;
+-webkit-transform-origin: 50%;
+transform-origin: 50%;
+-webkit-animation-duration: 1s;
+animation-duration: 1s;
+-webkit-animation-name: rotate;
+animation-name: rotate;
+-webkit-animation-iteration-count: infinite;
+animation-iteration-count: infinite;
+-webkit-animation-timing-function: linear;
+animation-timing-function: linear;
+}
+.loader .inner2 {
+animation-delay: 0.25s;
+}
+.loader .inner3 {
+animation-delay: 0.5s;
+animation-delay: 0.5s;
+}
 
 .legend {
 padding: 6px 8px;

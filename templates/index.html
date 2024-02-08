@@ -13,10 +13,10 @@
     <h2>How to Use This Tool</h2>
     <ul>
       <li><strong>Plotting a Route:</strong> Click on the map twice to set the starting and ending points for your route.</li>
-      <li><strong>Choose Data Type:</strong> Select "collected" for collected accident data or "predicted" for risk assessment based on road properties.</li>
+      <li><strong>Choose Data Type:</strong> Choose between "collected" accident data or "predicted" risk based on road properties.</li>
       <li><strong>Adjust Risk Coefficient:</strong> Use the slider to weigh the safety importance in the route calculation.</li>
       <li><strong>Keep Routes Alive:</strong> Enable this option to display multiple routes simultaneously.</li>
-      <li><strong>Show Accident/Risk Data:</strong> Show a colormap of each road's assigned accident or risk score.</li>
+      <li><strong>Show Data:</strong> Plot accidents coordinates and/or roads risk scores on the map.</li>
     </ul>
     <div class="more-info">
       <h3>More Information</h3>
@@ -37,7 +37,7 @@
     <button id="homeBtn">Home</button>
 
     <div class="control-group">
-        <label for="dataTypeSelect">Data type:</label>
+        <label for="dataTypeSelect">data type:</label>
         <select id="dataTypeSelect">
             <option value="num_accidents">collected</option>
             <option value="predicted_accidents">predicted</option>
@@ -46,15 +46,15 @@
     
     <div class="range-group">
         <span>shortest</span>
-        <input type="range" id="alphaSlider" min="0" max="1" step="0.01" value="0.5">
+        <input type="range" id="alphaSlider" min="0" max="1" step="0.01" value="1">
         <span>safest</span>
     </div>
     
     <div class="control-group">
         <input type="checkbox" id="keepLinesAlive" name="keepLinesAlive">
-        <label for="keepLinesAlive">Keep routes alive</label>
+        <label for="keepLinesAlive">keep routes alive</label>
         <input type="checkbox" id="showAccidentData" name="showAccidentData">
-        <label for="keepLinesAlive">Show accident data</label>
+        <label for="keepLinesAlive">show data</label>
     </div>
     <button id="helpBtn">?</button>
 </div>
