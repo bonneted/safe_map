@@ -1,5 +1,6 @@
 # Safe Route
-A routing algorithm that takes safety into account.
+A routing algorithm that takes safety into account. Try it [online](https://flask-production-73d6.up.railway.app/).
+
 [![Safe Route GUI](https://github.com/bonneted/safe_map/blob/main/static/img/SafeRoutePreview.png)](https://flask-production-73d6.up.railway.app/)
 
 ### How to Use This Tool
